@@ -1,0 +1,39 @@
+version: '3.8'
+services:
+  backend:
+    image: vaishaknstats/workshop-genai:backend-latest
+    ports:
+      - "8000:8000"
+    container_name: workshop-backend
+    environment:
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_NAME=${DB_NAME}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - JWT_ALGORITHM=${JWT_ALGORITHM}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
+      - DATABASE_URL=${DATABASE_URL}
+    env_file:
+      - .env
+    networks:
+      - app-network
+
+  frontend:
+    image: vaishaknstats/workshop-genai:frontend-latest
+    ports:
+      - "80:80"
+    container_name: workshop-frontend
+    environment:
+      - VITE_API_URL=${VITE_API_URL}
+    env_file:
+      - .env
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge 
